@@ -1,2 +1,2 @@
-export * from "./victory-candlestick";
-export * from "./candle";
+export { default as VictoryCandlestick } from "./victory-candlestick";
+export { default as Candle } from "./candle";
