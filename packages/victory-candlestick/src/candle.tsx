@@ -1,10 +1,34 @@
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 0.5, 1, 2] }]*/
 import React from "react";
 import PropTypes from "prop-types";
-import { Helpers, CommonProps, Line, Rect } from "victory-core";
+import {
+  Helpers,
+  CommonProps,
+  Line,
+  Rect,
+  VictoryCommonPrimitiveProps,
+} from "victory-core";
 import { assign, defaults, isFunction } from "lodash";
 
-const getCandleWidth = (candleWidth, props) => {
+interface CandleProps extends VictoryCommonPrimitiveProps {
+  candleRatio?: number;
+  candleWidth: number;
+  close: number;
+  datum?: any;
+  groupComponent: React.ReactElement;
+  high?: number;
+  lineComponent: React.ReactElement;
+  low?: number;
+  open: number;
+  rectComponent: React.ReactElement;
+  wickStrokeWidth?: number;
+  width?: number;
+  horizontal?: boolean;
+  x: number;
+  style: { [key: string]: any };
+}
+
+const getCandleWidth = (candleWidth: number | Function, props: CandleProps) => {
   const { style } = props;
   if (candleWidth) {
     return isFunction(candleWidth)
@@ -16,7 +40,7 @@ const getCandleWidth = (candleWidth, props) => {
   return candleWidth;
 };
 
-const getCandleProps = (props, style) => {
+const getCandleProps = (props: CandleProps, style: { [key: string]: any }) => {
   const { id, x, close, open, horizontal, candleWidth } = props;
   const candleLength = Math.abs(close - open);
   return {
@@ -29,7 +53,10 @@ const getCandleProps = (props, style) => {
   };
 };
 
-const getHighWickProps = (props, style) => {
+const getHighWickProps = (
+  props: CandleProps,
+  style: { [key: string]: any },
+) => {
   const { horizontal, high, open, close, x, id } = props;
   return {
     key: `${id}-highWick`,
@@ -41,7 +68,7 @@ const getHighWickProps = (props, style) => {
   };
 };
 
-const getLowWickProps = (props, style) => {
+const getLowWickProps = (props: CandleProps, style: { [key: string]: any }) => {
   const { horizontal, low, open, close, x, id } = props;
   return {
     key: `${id}-lowWick`,
@@ -53,7 +80,7 @@ const getLowWickProps = (props, style) => {
   };
 };
 
-const evaluateProps = (props) => {
+const evaluateProps = (props: CandleProps) => {
   /**
    * Potential evaluated props of following must be evaluated in this order:
    * 1) `style`
@@ -89,7 +116,7 @@ const evaluateProps = (props) => {
   });
 };
 
-const Candle = (props) => {
+const Candle = (props: CandleProps) => {
   props = evaluateProps(props);
   const {
     ariaLabel,
