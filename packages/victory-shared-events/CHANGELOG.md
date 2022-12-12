@@ -1,5 +1,7 @@
 # victory-shared-events
 
+## 36.6.9
+
 ## 36.6.8
 
 ### Patch Changes
