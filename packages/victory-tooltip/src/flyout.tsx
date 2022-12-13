@@ -12,6 +12,7 @@ import {
 } from "victory-core";
 import { isPlainObject, assign } from "lodash";
 
+// TODO: Convert this to an actual object argument
 const getVerticalPath = (props) => {
   const {
     pointerWidth = 0,
@@ -50,17 +51,11 @@ const getVerticalPath = (props) => {
 };
 
 const getHorizontalPath = (props) => {
-  const {
-    pointerWidth = 0,
-    cornerRadius = 0,
-    orientation = 0,
-    width = 0,
-    height = 0,
-    center = 0,
-  } = props;
+  const { pointerWidth, cornerRadius, orientation, width, height, center } =
+    props;
   const sign = orientation === "left" ? 1 : -1;
-  const x = props.x || 0 + (props.dx || 0);
-  const y = props.y || 0 + (props.dy || 0);
+  const x = props.x + (props.dx || 0);
+  const y = props.y + (props.dy || 0);
   const centerX = isPlainObject(center) ? center.x : 0;
   const centerY = isPlainObject(center) ? center.y : 0;
   const pointerEdge = centerX - sign * (width / 2);
@@ -93,7 +88,7 @@ const getFlyoutPath = (props: FlyoutProps) => {
     : getVerticalPath(props);
 };
 
-const evaluateProps = (props) => {
+const evaluateProps = (props: FlyoutProps) => {
   /**
    * Potential evaluated props are:
    * `id`
@@ -126,7 +121,6 @@ export const Flyout: React.FC<FlyoutProps> = (props) => {
 
 Flyout.propTypes = {
   ...CommonProps.primitiveProps,
-  // TODO: Why's this failing?
   center: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
   cornerRadius: PropTypes.number,
   datum: PropTypes.object,
@@ -163,6 +157,6 @@ export interface FlyoutProps extends VictoryCommonPrimitiveProps {
   pointerLength?: NumberOrCallback;
   pointerWidth?: NumberOrCallback;
   width?: NumberOrCallback;
-  x?: NumberOrCallback;
-  y?: NumberOrCallback;
+  x?: number;
+  y?: number;
 }
