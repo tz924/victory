@@ -10,10 +10,88 @@ import {
   DefaultTransitions,
   CommonProps,
   UserProps,
+  VictoryDatableProps,
+  VictoryLabelableProps,
+  VictoryMultiLabelableProps,
+  VictoryCommonProps,
+  StringOrNumberOrCallback,
+  EventPropTypeInterface,
+  OrientationTypes,
+  VictoryStyleObject,
+  VictoryLabelStyleObject,
 } from "victory-core";
 import { isNil, flatten } from "lodash";
 import Candle from "./candle";
 import { getDomain, getData, getBaseProps } from "./helper-methods";
+
+interface VictoryCandlestickStyleInterface {
+  close?: VictoryStyleObject;
+  closeLabels?: VictoryLabelStyleObject | VictoryLabelStyleObject[];
+  data?: VictoryStyleObject;
+  high?: VictoryStyleObject;
+  highLabels?: VictoryLabelStyleObject | VictoryLabelStyleObject[];
+  labels?: VictoryLabelStyleObject | VictoryLabelStyleObject[];
+  low?: VictoryStyleObject;
+  lowLabels?: VictoryLabelStyleObject | VictoryLabelStyleObject[];
+  open?: VictoryStyleObject;
+  openLabels?: VictoryLabelStyleObject | VictoryLabelStyleObject[];
+  parent?: VictoryStyleObject;
+}
+
+type VictoryCandlestickLabelsType =
+  | (string | number)[]
+  | boolean
+  | ((datum: any) => number);
+
+interface VictoryCandlestickProps
+  extends Omit<VictoryCommonProps, "polar">,
+    VictoryDatableProps,
+    VictoryLabelableProps,
+    VictoryMultiLabelableProps {
+  candleColors?: {
+    positive?: string;
+    negative?: string;
+  };
+  candleRatio?: number;
+  candleWidth?: number | Function;
+  close?: StringOrNumberOrCallback | string[];
+  closeLabelComponent?: React.ReactElement;
+  closeLabels?: VictoryCandlestickLabelsType;
+  eventKey?: StringOrNumberOrCallback | string[];
+  events?: EventPropTypeInterface<
+    | "data"
+    | "labels"
+    | "open"
+    | "openLabels"
+    | "close"
+    | "closeLabels"
+    | "low"
+    | "lowLabels"
+    | "high"
+    | "highLabels",
+    StringOrNumberOrCallback | string[]
+  >[];
+  high?: StringOrNumberOrCallback | string[];
+  highLabelComponenet?: React.ReactElement;
+  highLabels?: VictoryCandlestickLabelsType;
+  labelOrientation?:
+    | OrientationTypes
+    | {
+        open?: OrientationTypes;
+        close?: OrientationTypes;
+        low?: OrientationTypes;
+        high?: OrientationTypes;
+      };
+  low?: StringOrNumberOrCallback | string[];
+  lowLabelComponent?: React.ReactElement;
+  lowLabels?: VictoryCandlestickLabelsType;
+  open?: StringOrNumberOrCallback | string[];
+  openLabelComponent?: React.ReactElement;
+  openLabels?: VictoryCandlestickLabelsType;
+  size?: number;
+  style?: VictoryCandlestickStyleInterface;
+  wickStrokeWidth?: number;
+}
 
 /* eslint-disable no-magic-numbers */
 const fallbackProps = {
@@ -53,7 +131,12 @@ const datumHasXandY = (datum) => {
   return !isNil(datum._x) && !isNil(datum._y);
 };
 
-class VictoryCandlestick extends React.Component {
+class VictoryCandlestick extends React.Component<VictoryCandlestickProps, any> {
+  dataKeys: any;
+  getComponentProps: any;
+  renderContainer: any;
+  animateComponent: any;
+
   static animationWhitelist = [
     "data",
     "domain",
