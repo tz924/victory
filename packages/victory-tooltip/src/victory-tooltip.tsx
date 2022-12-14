@@ -26,44 +26,6 @@ const fallbackProps = {
   pointerWidth: 10,
 };
 
-export interface VictoryTooltipProps
-  extends VictoryLabelableProps,
-    VictoryLabelProps {
-  activateData?: boolean;
-  active?: boolean;
-  activePoints?: any[];
-  angle: VictoryLabelStyleObject["angle"];
-  center?: { x?: number; y?: number };
-  centerOffset?: {
-    x?: NumberOrCallback;
-    y?: NumberOrCallback;
-  };
-  constrainToVisibleArea?: boolean;
-  cornerRadius?: NumberOrCallback;
-  height?: number;
-  horizontal?: boolean;
-  flyoutComponent?: React.ReactElement;
-  flyoutHeight?: NumberOrCallback;
-  flyoutPadding?: PaddingOrCallback;
-  flyoutStyle?: VictoryStyleObject;
-  flyoutWidth?: NumberOrCallback;
-  id?: number | string;
-  index?: number | string;
-  orientation?: OrientationTypes | ((...args: any[]) => OrientationTypes);
-  pointerLength?: NumberOrCallback;
-  pointerOrientation?:
-    | OrientationTypes
-    | ((...args: any[]) => OrientationTypes);
-  pointerWidth?: NumberOrCallback;
-  style?:
-    | (VictoryLabelStyleObject & {
-        angle?: number;
-      })
-    | VictoryLabelStyleObject[];
-  theme?: VictoryThemeDefinition;
-  width?: number;
-}
-
 export class VictoryTooltip extends React.Component<VictoryTooltipProps> {
   static displayName = "VictoryTooltip";
   static role = "tooltip";
@@ -294,16 +256,12 @@ export class VictoryTooltip extends React.Component<VictoryTooltipProps> {
     });
 
     const offsetX =
-      centerOffset &&
-      isPlainObject(centerOffset) &&
-      centerOffset.x !== undefined
+      isPlainObject(centerOffset) && centerOffset.x !== undefined
         ? Helpers.evaluateProp(centerOffset.x, evaluatedProps)
         : 0;
 
     const offsetY =
-      centerOffset &&
-      isPlainObject(centerOffset) &&
-      centerOffset.y !== undefined
+      isPlainObject(centerOffset) && centerOffset.y !== undefined
         ? Helpers.evaluateProp(centerOffset.y, evaluatedProps)
         : 0;
 
@@ -415,15 +373,11 @@ export class VictoryTooltip extends React.Component<VictoryTooltipProps> {
 
     const center = {
       x:
-        props.center &&
-        isPlainObject(props.center) &&
-        props.center.x !== undefined
+        isPlainObject(props.center) && props.center.x !== undefined
           ? props.center.x
           : flyoutCenter.x,
       y:
-        props.center &&
-        isPlainObject(props.center) &&
-        props.center.y !== undefined
+        isPlainObject(props.center) && props.center.y !== undefined
           ? props.center.y
           : flyoutCenter.y,
     };
@@ -493,7 +447,7 @@ export class VictoryTooltip extends React.Component<VictoryTooltipProps> {
   }
 
   getLabelProps(props, calculatedValues) {
-    const { flyoutCenter, style, labelSize, dy, dx } = calculatedValues;
+    const { flyoutCenter, style, labelSize, dy = 0, dx = 0 } = calculatedValues;
     const { text, datum, activePoints, labelComponent, index, flyoutPadding } =
       props;
     const textAnchor =
@@ -622,4 +576,42 @@ export class VictoryTooltip extends React.Component<VictoryTooltipProps> {
     const props = Helpers.modifyProps(this.props, fallbackProps, "tooltip");
     return this.renderTooltip(props);
   }
+}
+
+export interface VictoryTooltipProps
+  extends VictoryLabelableProps,
+    VictoryLabelProps {
+  activateData?: boolean;
+  active?: boolean;
+  activePoints?: any[];
+  angle: VictoryLabelStyleObject["angle"];
+  center?: { x?: number; y?: number };
+  centerOffset?: {
+    x?: NumberOrCallback;
+    y?: NumberOrCallback;
+  };
+  constrainToVisibleArea?: boolean;
+  cornerRadius?: NumberOrCallback;
+  height?: number;
+  horizontal?: boolean;
+  flyoutComponent?: React.ReactElement;
+  flyoutHeight?: NumberOrCallback;
+  flyoutPadding?: PaddingOrCallback;
+  flyoutStyle?: VictoryStyleObject;
+  flyoutWidth?: NumberOrCallback;
+  id?: number | string;
+  index?: number | string;
+  orientation?: OrientationTypes | ((...args: any[]) => OrientationTypes);
+  pointerLength?: NumberOrCallback;
+  pointerOrientation?:
+    | OrientationTypes
+    | ((...args: any[]) => OrientationTypes);
+  pointerWidth?: NumberOrCallback;
+  style?:
+    | (VictoryLabelStyleObject & {
+        angle?: number;
+      })
+    | VictoryLabelStyleObject[];
+  theme?: VictoryThemeDefinition;
+  width?: number;
 }

@@ -12,21 +12,14 @@ import {
 } from "victory-core";
 import { isPlainObject, assign } from "lodash";
 
-// TODO: Convert this to an actual object argument
 const getVerticalPath = (props) => {
-  const {
-    pointerWidth = 0,
-    cornerRadius = 0,
-    orientation = 0,
-    width = 0,
-    height = 0,
-    center,
-  } = props;
+  const { pointerWidth, cornerRadius, orientation, width, height, center } =
+    props;
   const sign = orientation === "bottom" ? 1 : -1;
   const x = props.x || 0 + (props.dx || 0);
   const y = props.y || 0 + (props.dy || 0);
-  const centerX = center && isPlainObject(center) ? center.x || 0 : 0;
-  const centerY = center && isPlainObject(center) ? center.y || 0 : 0;
+  const centerX = isPlainObject(center) && center.x;
+  const centerY = isPlainObject(center) && center.y;
   const pointerEdge = centerY + sign * (height / 2);
   const oppositeEdge = centerY - sign * (height / 2);
   const rightEdge = centerX + width / 2;
@@ -56,8 +49,8 @@ const getHorizontalPath = (props) => {
   const sign = orientation === "left" ? 1 : -1;
   const x = props.x + (props.dx || 0);
   const y = props.y + (props.dy || 0);
-  const centerX = isPlainObject(center) ? center.x : 0;
-  const centerY = isPlainObject(center) ? center.y : 0;
+  const centerX = isPlainObject(center) && center.x;
+  const centerY = isPlainObject(center) && center.y;
   const pointerEdge = centerX - sign * (width / 2);
   const oppositeEdge = centerX + sign * (width / 2);
   const bottomEdge = centerY + height / 2;
@@ -148,12 +141,12 @@ export interface FlyoutProps extends VictoryCommonPrimitiveProps {
     y?: number | null;
   };
   cornerRadius?: NumberOrCallback;
-  datum?: object; // TODO: Get an actual type going here
+  datum?: object;
   dx?: NumberOrCallback;
   dy?: NumberOrCallback;
   height?: NumberOrCallback;
   orientation?: OrientationTypes;
-  pathComponent?: React.ReactElement; // There's a default here we could hopefully use instead
+  pathComponent?: React.ReactElement;
   pointerLength?: NumberOrCallback;
   pointerWidth?: NumberOrCallback;
   width?: NumberOrCallback;
