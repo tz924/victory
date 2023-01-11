@@ -15,7 +15,7 @@ export const getData = (props) => {
   return Data.formatData(props.data, props, accessorTypes);
 };
 
-const reduceData = (dataset, axis, type) => {
+const reduceData = (dataset: number[], axis: string, type: string) => {
   const yDataTypes = { min: "_low", max: "_high" };
   const dataType = axis === "x" ? "_x" : yDataTypes[type];
   const baseCondition = type === "min" ? Infinity : -Infinity;
