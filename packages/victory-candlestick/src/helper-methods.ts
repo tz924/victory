@@ -10,7 +10,7 @@ import {
 
 const TYPES = ["close", "open", "high", "low"];
 
-export const getData = (props) => {
+export const getData = (props: { [key: string]: any }) => {
   const accessorTypes = ["x", "high", "low", "close", "open"];
   return Data.formatData(props.data, props, accessorTypes);
 };
@@ -28,7 +28,7 @@ const reduceData = (dataset: number[], axis: string, type: string) => {
   }, baseCondition);
 };
 
-const getDomainFromData = (props, axis) => {
+const getDomainFromData = (props: { [key: string]: any }, axis: string) => {
   const minDomain = Domain.getMinFromProps(props, axis);
   const maxDomain = Domain.getMaxFromProps(props, axis);
   const dataset = getData(props);
@@ -44,11 +44,15 @@ const getDomainFromData = (props, axis) => {
   return Domain.getDomainFromMinMax(min, max);
 };
 
-export const getDomain = (props, axis) => {
+export const getDomain = (props: { [key: string]: any }, axis: string) => {
   return Domain.createDomainFunction(getDomainFromData)(props, axis);
 };
 
-const getLabelStyle = (props, styleObject, namespace) => {
+const getLabelStyle = (
+  props: { [key: string]: any },
+  styleObject: { [key: string]: any },
+  namespace: string,
+) => {
   const component = props[`${namespace}LabelComponent`];
   const baseStyle = styleObject[`${namespace}Labels`] || styleObject.labels;
   if (!Helpers.isTooltip(component)) {
@@ -58,7 +62,11 @@ const getLabelStyle = (props, styleObject, namespace) => {
   return defaults({}, tooltipTheme.style, baseStyle);
 };
 
-const getStyles = (props, style, defaultStyles = {}) => {
+const getStyles = (
+  props: { [key: string]: any },
+  style: { [key: string]: any },
+  defaultStyles = {},
+) => {
   if (props.disableInlineStyles) {
     return {};
   }
@@ -117,7 +125,10 @@ const getStyles = (props, style, defaultStyles = {}) => {
 
 // This method will edit or remove candlestick data points that fall outside of the desired domain
 // eslint-disable-next-line complexity
-const formatDataFromDomain = (datum, domain) => {
+const formatDataFromDomain = (
+  datum: { [key: string]: any },
+  domain: { [key: string]: any },
+) => {
   const minDomainX = Collection.getMinValue(domain.x);
   const maxDomainX = Collection.getMaxValue(domain.x);
   const minDomainY = Collection.getMinValue(domain.y);
@@ -146,7 +157,7 @@ const formatDataFromDomain = (datum, domain) => {
   return Object.assign({}, datum, { _x, _low, _open, _close, _high });
 };
 
-const getCalculatedValues = (props) => {
+const getCalculatedValues = (props: { [key: string]: any }) => {
   const { polar } = props;
   const defaultStyle = Helpers.getDefaultStyles(props, "candlestick");
   const style = getStyles(props, props.style, defaultStyle);
@@ -175,11 +186,15 @@ const getCalculatedValues = (props) => {
   return { domain, data, scale, style, origin, labelOrientation };
 };
 
-const isTransparent = (attr) => {
+const isTransparent = (attr: string) => {
   return attr === "none" || attr === "transparent";
 };
 
-const getDataStyles = (datum, style, props) => {
+const getDataStyles = (
+  datum: { [key: string]: any },
+  style: { [key: string]: any },
+  props: { [key: string]: any },
+) => {
   if (props.disableInlineStyles) {
     return {};
   }
@@ -194,7 +209,7 @@ const getDataStyles = (datum, style, props) => {
   return assign({}, style, { stroke, fill });
 };
 
-const getText = (props, type) => {
+const getText = (props: { [key: string]: any }, type: string) => {
   const { datum, index, labels } = props;
   const propName = `${type}Labels`;
   const labelProp = props[propName];
@@ -207,7 +222,10 @@ const getText = (props, type) => {
   return Array.isArray(labelProp) ? labelProp[index] : labelProp;
 };
 
-const getCandleWidth = (props, style) => {
+const getCandleWidth = (
+  props: { [key: string]: any },
+  style?: { [key: string]: any },
+) => {
   const { data, candleWidth, scale, defaultCandleWidth } = props;
   if (candleWidth) {
     return isFunction(candleWidth)
@@ -225,14 +243,17 @@ const getCandleWidth = (props, style) => {
   return Math.max(1, defaultWidth);
 };
 
-const getOrientation = (labelOrientation, type = "labels") => {
+const getOrientation = (
+  labelOrientation: { [key: string]: any },
+  type = "labels",
+) => {
   return isPlainObject(labelOrientation)
     ? labelOrientation[type]
     : labelOrientation;
 };
 
 /* eslint-disable complexity*/
-const calculatePlotValues = (props) => {
+const calculatePlotValues = (props: { [key: string]: any }) => {
   const {
     positions,
     labelStyle,
@@ -281,7 +302,12 @@ const calculatePlotValues = (props) => {
 /* eslint-enable complexity*/
 
 /* eslint-disable max-params*/
-const getLabelProps = (props, text, style, type) => {
+const getLabelProps = (
+  props: { [key: string]: any },
+  text: string,
+  style: { [key: string]: any },
+  type?: string,
+) => {
   const {
     x,
     high,
@@ -359,7 +385,10 @@ const getLabelProps = (props, text, style, type) => {
 };
 /* eslint-enable max-params*/
 
-export const getBaseProps = (props, fallbackProps) => {
+export const getBaseProps = (
+  props: { [key: string]: any },
+  fallbackProps: { [key: string]: any },
+) => {
   // eslint-disable-line max-statements
   props = Helpers.modifyProps(props, fallbackProps, "candlestick");
   const calculatedValues = getCalculatedValues(props);
@@ -402,73 +431,84 @@ export const getBaseProps = (props, fallbackProps) => {
   };
 
   // eslint-disable-next-line complexity
-  return data.reduce((childProps, datum, index) => {
-    const eventKey = !isNil(datum.eventKey) ? datum.eventKey : index;
-    const x = scale.x(datum._x1 !== undefined ? datum._x1 : datum._x);
-    datum = formatDataFromDomain(datum, domain);
-    const { _low, _open, _close, _high } = datum;
-    const high = scale.y(_high);
-    const close = scale.y(_close);
-    const open = scale.y(_open);
-    const low = scale.y(_low);
+  return data.reduce(
+    (
+      childProps: { [key: string]: any },
+      datum: { [key: string]: any },
+      index: number,
+    ) => {
+      const eventKey = !isNil(datum.eventKey) ? datum.eventKey : index;
+      const x = scale.x(datum._x1 !== undefined ? datum._x1 : datum._x);
+      datum = formatDataFromDomain(datum, domain);
+      const { _low, _open, _close, _high } = datum;
+      const high = scale.y(_high);
+      const close = scale.y(_close);
+      const open = scale.y(_open);
+      const low = scale.y(_low);
 
-    const dataStyle = getDataStyles(datum, style.data, props);
-    const dataProps = {
-      x,
-      high,
-      low,
-      candleWidth,
-      candleRatio,
-      scale,
-      data,
-      datum,
-      groupComponent,
-      index,
-      style: dataStyle,
-      width,
-      polar,
-      origin,
-      wickStrokeWidth,
-      open,
-      close,
-      horizontal,
-      labelOrientation,
-      disableInlineStyles,
-    };
-    dataProps.candleWidth = getCandleWidth(dataProps);
-    const extendedProps = defaults(Object.assign({}, dataProps), props);
+      const dataStyle = getDataStyles(datum, style.data, props);
+      const dataProps = {
+        x,
+        high,
+        low,
+        candleWidth,
+        candleRatio,
+        scale,
+        data,
+        datum,
+        groupComponent,
+        index,
+        style: dataStyle,
+        width,
+        polar,
+        origin,
+        wickStrokeWidth,
+        open,
+        close,
+        horizontal,
+        labelOrientation,
+        disableInlineStyles,
+      };
+      dataProps.candleWidth = getCandleWidth(dataProps);
+      const extendedProps = defaults(Object.assign({}, dataProps), props);
 
-    childProps[eventKey] = {
-      data: dataProps,
-    };
+      childProps[eventKey] = {
+        data: dataProps,
+      };
 
-    if (labels) {
-      const text = LabelHelpers.getText(props, datum, index);
-      if (
-        (text !== undefined && text !== null) ||
-        (labels && (events || sharedEvents))
-      ) {
-        childProps[eventKey].labels = getLabelProps(extendedProps, text, style);
+      if (labels) {
+        const text = LabelHelpers.getText(props, datum, index);
+        if (
+          (text !== undefined && text !== null) ||
+          (labels && (events || sharedEvents))
+        ) {
+          childProps[eventKey].labels = getLabelProps(
+            extendedProps,
+            text,
+            style,
+          );
+        }
       }
-    }
 
-    TYPES.forEach((type) => {
-      const labelText = getText(extendedProps, type);
-      const labelProp = props.labels || props[`${type}Labels`];
-      if (
-        (labelText !== null && labelText !== undefined) ||
-        (labelProp && (events || sharedEvents))
-      ) {
-        const target = `${type}Labels`;
-        childProps[eventKey][target] = getLabelProps(
-          extendedProps,
-          labelText,
-          style,
-          type,
-        );
-      }
-    });
+      TYPES.forEach((type) => {
+        const labelText = getText(extendedProps, type);
+        const labelProp = props.labels || props[`${type}Labels`];
+        if (
+          (labelText !== null && labelText !== undefined) ||
+          (labelProp && (events || sharedEvents))
+        ) {
+          const target = `${type}Labels`;
+          childProps[eventKey][target] = getLabelProps(
+            extendedProps,
+            labelText,
+            style,
+            type,
+          );
+        }
+      });
 
-    return childProps;
-  }, initialChildProps);
+      return childProps;
+    },
+    initialChildProps,
+  );
 };
