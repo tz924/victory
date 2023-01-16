@@ -65,7 +65,11 @@ const getLabelStyle = (
 const getStyles = (
   props: { [key: string]: any },
   style: { [key: string]: any },
-  defaultStyles = {},
+  defaultStyles: {
+    parent?: { [key: string]: any };
+    labels?: { [key: string]: any };
+    data?: { [key: string]: any };
+  } = {},
 ) => {
   if (props.disableInlineStyles) {
     return {};
