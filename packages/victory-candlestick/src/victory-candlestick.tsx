@@ -53,7 +53,7 @@ interface VictoryCandlestickProps
     negative?: string;
   };
   candleRatio?: number;
-  candleWidth?: number | Function;
+  candleWidth?: number | (() => void);
   close?: StringOrNumberOrCallback | string[];
   closeLabelComponent?: React.ReactElement;
   closeLabels?: VictoryCandlestickLabelsType;

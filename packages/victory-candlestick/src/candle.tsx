@@ -28,7 +28,10 @@ interface CandleProps extends VictoryCommonPrimitiveProps {
   style: { [key: string]: any };
 }
 
-const getCandleWidth = (candleWidth: number | Function, props: CandleProps) => {
+const getCandleWidth = (
+  candleWidth: number | (() => void),
+  props: CandleProps,
+) => {
   const { style } = props;
   if (candleWidth) {
     return isFunction(candleWidth)

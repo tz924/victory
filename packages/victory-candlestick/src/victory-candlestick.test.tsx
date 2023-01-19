@@ -47,14 +47,14 @@ describe("components/victory-candlestick", () => {
     it("renders an svg with the correct width and height", () => {
       const { container } = render(<VictoryCandlestick data={dataSet} />);
       const svg = container.querySelector("svg");
-      expect(svg.getAttribute("style")).toContain("width: 100%; height: 100%");
+      expect(svg!.getAttribute("style")).toContain("width: 100%; height: 100%");
     });
 
     it("renders an svg with the correct viewBox", () => {
       const { container } = render(<VictoryCandlestick data={dataSet} />);
       const svg = container.querySelector("svg");
       const viewBoxValue = `0 0 ${450} ${300}`;
-      expect(svg.getAttribute("viewBox")).toEqual(viewBoxValue);
+      expect(svg!.getAttribute("viewBox")).toEqual(viewBoxValue);
     });
 
     it("renders 8 points", () => {

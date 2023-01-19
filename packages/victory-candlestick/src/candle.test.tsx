@@ -60,7 +60,7 @@ describe("victory-primitives/candle", () => {
     const { container } = renderCandle();
     const rect = container.querySelector("rect");
     const [width, height, x, y] = ["width", "height", "x", "y"].map((prop) =>
-      rect.getAttribute(prop),
+      rect!.getAttribute(prop),
     );
 
     // width = style.width || 0.5 * (width - 2 * padding) / data.length;
